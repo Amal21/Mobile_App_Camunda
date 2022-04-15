@@ -1,15 +1,51 @@
 import React, {useContext} from 'react'
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, View, FlatList, ListView} from 'react-native';
 import {AuthContext} from '../context/AuthContext';
 
-const HomeScreen = () => {
+const Home = () => {
   const {listprocess, isLoading, logout} = useContext(AuthContext);
+
+  //const array=listprocess.data.map((e) => {
+          
+    //console.log('list of processes '+e.name);
+    
+  //});
+
+
+
 
   return (
     <View style={styles.container}>
       
-      <Text style={styles.welcome}>Welcome </Text>
-      <Button title="Logout" color="red" onPress={logout} />
+      <Text style={styles.welcome}>Liste des processes  </Text>
+
+     
+
+       <View style={styles.container}>
+      {listprocess.data.map((e) => {
+
+
+
+        return(
+         <Text style={styles.welcome}>{e.name}</Text>
+
+        )
+        
+      
+       
+        //console.log('list of processes '+e.name);
+
+
+
+
+        
+      })
+      }
+      </View>
+     
+
+
+     
     </View>
   );
 };
@@ -26,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default Home;

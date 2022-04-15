@@ -11,15 +11,12 @@ export const AuthProvider = ({children}) => {
   const [listprocess, setListProcess] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
 
- 
 
   const login = (email, password) => {
 
     setIsLoading(true);
-
-   
-
     axios
       .get(`${BASE_URL}/process-definition`,{
 
@@ -30,9 +27,23 @@ export const AuthProvider = ({children}) => {
       })
       .then(res => {
         let listprocess = res;
+        //console.log(listprocess);
+        setListProcess(listprocess);
+        setIsLogged(true);
+        //console.log(JSON.stringify(listprocess));
+        //console.log(JSON.stringify(listprocess, null, 2));
+
+        const array=listprocess.data.map((e) => {
+          
+          console.log('list of processes '+e.name);
+          
+        });
+
+        
+        //AsyncStorage.setItem('listprocess', JSON.stringify(listprocess));
+        //AsyncStorage.getItem(listprocess);
         console.log(listprocess);
-        setListProcess(listprocess)
-        AsyncStorage.setItem('listprocess', JSON.stringify(listprocess));
+        
         setIsLoading(false);
       })
       .catch(e => {
@@ -53,6 +64,7 @@ export const AuthProvider = ({children}) => {
       value={{
         isLoading,
         listprocess,
+        isLogged,
         splashLoading,
         login
         

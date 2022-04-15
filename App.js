@@ -6,8 +6,10 @@ import {AuthProvider} from './src/context/AuthContext';
 const App = () => {
   return (
     <AuthProvider>
+
       <StatusBar backgroundColor="#06bcee" />
       <Navigation />
+      
     </AuthProvider>
   );
 };

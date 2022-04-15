@@ -3,25 +3,39 @@ import {Text, View} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
+import Home from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import {AuthContext} from '../context/AuthContext';
-import SplashScreen from '../screens/SplashScreen';
+
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const {listprocess, splashLoading} = useContext(AuthContext);
+  const {listprocess, splashLoading,isLogged} = useContext(AuthContext);
+  
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        
-            <Stack.Screen
+
+            
+            {isLogged ? (
+              <Stack.Screen name="Home" component={Home} />
+              
+            ):(
+
+              <Stack.Screen
               name="Login"
               component={LoginScreen}
               options={{headerShown: false}}
             />
+
+
+            )}
+           
+          
+            
+          
             
          
       </Stack.Navigator>

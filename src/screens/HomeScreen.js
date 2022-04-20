@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       
-      <Text style={styles.welcome}>Liste des processes  </Text>
+      <Text style={styles.welcome}>Liste des processus</Text>
 
      
 

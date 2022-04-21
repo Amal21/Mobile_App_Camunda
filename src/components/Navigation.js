@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import AttestationPresence from '../screens/AttestationPresence';
 import {AuthContext} from '../context/AuthContext';
 
 
@@ -20,15 +21,31 @@ const Navigation = () => {
 
             
             {isLogged ? (
-              <Stack.Screen name="Home" component={Home} />
+          <>
+              <Stack.Screen 
+                 name="Home"
+                 component={Home} />
+
+    
+
+                 <Stack.Screen 
+                 name="Demande Attestation de Présence"
+                 component={AttestationPresence} />
+
+                 </>
+
+            
+          
+
+             
               
             ):(
 
               <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{headerShown: false}}
-            />
+                 name="Login"
+                 component={LoginScreen}
+                 options={{headerShown: false}}
+              />
 
 
             )}

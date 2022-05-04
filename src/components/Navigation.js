@@ -8,53 +8,30 @@ import LoginScreen from '../screens/LoginScreen';
 import AttestationPresence from '../screens/AttestationPresence';
 import {AuthContext} from '../context/AuthContext';
 
-
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const {listprocess, splashLoading,isLogged} = useContext(AuthContext);
-  
+  const {listprocess, splashLoading, isLogged} = useContext(AuthContext);
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-
-            
-            {isLogged ? (
+        {isLogged ? (
           <>
-              <Stack.Screen 
-                 name="Home"
-                 component={Home} />
+            <Stack.Screen name="Home" component={Home} />
 
-    
-
-                 <Stack.Screen 
-                 name="Demande Attestation de Présence"
-                 component={AttestationPresence} />
-
-                 </>
-
-            
-          
-
-             
-              
-            ):(
-
-              <Stack.Screen
-                 name="Login"
-                 component={LoginScreen}
-                 options={{headerShown: false}}
-              />
-
-
-            )}
-           
-          
-            
-          
-            
-         
+            <Stack.Screen
+              name="Demande Attestation de Présence"
+              component={AttestationPresence}
+            />
+          </>
+        ) : (
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{headerShown: false}}
+          />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

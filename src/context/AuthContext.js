@@ -3,32 +3,28 @@ import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
 import {BASE_URL} from '../config';
 
-
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-  
   const [listprocess, setListProcess] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
 
-
   const login = (email, password) => {
-
     setIsLoading(true);
     axios
-      .get(`${BASE_URL}/process-definition?latest=true&active=true&startableInTasklist=true&startablePermissionCheck=true&firstResult=0&maxResults=15`,
-      {
-
-        auth: {
-          username: email,
-          password: password
-        }
-      })
+      .get(
+        `${BASE_URL}/process-definition?latest=true&active=true&startableInTasklist=true&startablePermissionCheck=true&firstResult=0&maxResults=15`,
+        {
+          auth: {
+            username: email,
+            password: password,
+          },
+        },
+      )
       .then(res => {
-
-        AsyncStorage.setItem()
+        AsyncStorage.setItem();
 
         AsyncStorage.setItem('username', email);
         AsyncStorage.setItem('password', password);
@@ -40,17 +36,14 @@ export const AuthProvider = ({children}) => {
         //console.log(JSON.stringify(listprocess));
         //console.log(JSON.stringify(listprocess, null, 2));
 
-        const array=listprocess.data.map((e) => {
-          
-          console.log('list of processes '+e.name);
-          
+        const array = listprocess.data.map(e => {
+          console.log('list of processes ' + e.name + ' id : ' + e.id);
         });
 
-        
         //AsyncStorage.setItem('listprocess', JSON.stringify(listprocess));
         //AsyncStorage.getItem(listprocess);
         console.log(listprocess);
-        
+
         setIsLoading(false);
       })
       .catch(e => {
@@ -59,9 +52,6 @@ export const AuthProvider = ({children}) => {
       });
   };
 
-  
-
-  
   useEffect(() => {
     //isLoggedIn();
   }, []);
@@ -73,8 +63,7 @@ export const AuthProvider = ({children}) => {
         listprocess,
         isLogged,
         splashLoading,
-        login
-        
+        login,
       }}>
       {children}
     </AuthContext.Provider>

@@ -13,16 +13,15 @@ import {
 import {BASE_URL} from '../config';
 import axios from 'axios';
 
-const AttestationPresence = () => {
+const AttestationPresence = ({route}) => {
+  const {id} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   //const [userName, setUserName ] = useState();
   //const [passWord, setPassWord ] = useState();
   const [fieldsFormAPI, setFieldsFormAPI] = useState(null);
   const [keysOfData, setKeysOfData] = useState();
-  const [requestData , setRequestData] = useState()
+  const [requestData, setRequestData] = useState();
 
- 
- 
   /*
   const crendentials= async () => {
     try { 
@@ -51,16 +50,14 @@ const AttestationPresence = () => {
 */
 
   const depotDemande = async () => {
-
     let userName = await AsyncStorage.getItem('username');
     let passWord = await AsyncStorage.getItem('password');
 
     axios
       .post(
-        `${BASE_URL}/process-definition/att_presence:4:bd2b40ca-ba49-11ec-9615-8d765d216035/submit-form`,
-        
-        requestData
-        ,
+        `${BASE_URL}/process-definition/${id}/submit-form`,
+
+        requestData,
         {
           auth: {
             username: userName,
@@ -73,17 +70,12 @@ const AttestationPresence = () => {
           'demande attestation de présence envoyée avec succès : ',
           res.data,
         );
-        setRequestData({"variables": {...fieldsFormAPI}})
-      
+     setRequestData({variables: {...fieldsFormAPI}});
+        //setFieldsFormAPI(fieldsFormAPI)
       })
       .catch(e => {
         console.log(` demande attestation error ${e}`);
       });
-
-
-      
-
-   
   };
 
   const getForm = async () => {
@@ -91,20 +83,17 @@ const AttestationPresence = () => {
     let passWord = await AsyncStorage.getItem('password');
 
     await axios
-      .get(
-        `${BASE_URL}/process-definition/att_presence:4:bd2b40ca-ba49-11ec-9615-8d765d216035/form-variables`,
-        {
-          auth: {
-            username: userName,
-            password: passWord,
-          },
+      .get(`${BASE_URL}/process-definition/${id}/form-variables`, {
+        auth: {
+          username: userName,
+          password: passWord,
         },
-      )
+      })
       .then(res => {
         //console.log('Data from Get Axios ', JSON.stringify(res.data, null,2));
         setFieldsFormAPI(res.data);
         setKeysOfData(Object.keys(res.data));
-        setRequestData({"variables": {...res.data}})
+        setRequestData({variables: {...res.data}});
       })
       .catch(e => {
         console.log(`Get Form error ${e}`);
@@ -114,20 +103,19 @@ const AttestationPresence = () => {
   const handleChange = (key, value) => {
     console.log('Text Index:' + key);
     console.log('Text Value:' + value);
-    const name = keysOfData[key]
-   // console.log( "name" ,name)
+    const name = keysOfData[key];
+    // console.log( "name" ,name)
     setRequestData(
-
       //ovveride of names motif ..with new values
 
-      {variables : { ...requestData.variables, [name]: { ...requestData.variables[name], value } }
-      }
+      {
+        variables: {
+          ...requestData.variables,
+          [name]: {...requestData.variables[name], value},
+        },
+      },
     );
-
-   
   };
-
-
 
   useEffect(() => {
     getForm();
@@ -136,10 +124,7 @@ const AttestationPresence = () => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
-      {
-      console.log("requestData here" , JSON.stringify(requestData, null,2))
-
-      }
+        {console.log('fieldsFormAPI here', JSON.stringify(requestData, null, 2))}
         {fieldsFormAPI ? (
           keysOfData?.map((el, key) => {
             return (
@@ -148,9 +133,9 @@ const AttestationPresence = () => {
                 name={keysOfData[key]}
                 key={key}
                 type={fieldsFormAPI[el].type}
-                value={fieldsFormAPI[el].value}
+                value={requestData?.variables[el].value}
                 placeholder={`Entrer votre ${keysOfData[key]}`}
-                onChangeText={text => handleChange(key, text )}
+                onChangeText={text => handleChange(key, text)}
               />
             );
           })

@@ -1,134 +1,249 @@
-import React, { useState} from 'react'
+import React, {useState, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-    Button,
-    Text,
-    TextInput,
-    View,
-    StyleSheet} from 'react-native';
+  Button,
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  Alert,
+  Modal,
+  Pressable,
+} from 'react-native';
 import {BASE_URL} from '../config';
 import axios from 'axios';
 
+const AttestationPresence = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  //const [userName, setUserName ] = useState();
+  //const [passWord, setPassWord ] = useState();
+  const [fieldsFormAPI, setFieldsFormAPI] = useState(null);
+  const [keysOfData, setKeysOfData] = useState();
+  const [requestData , setRequestData] = useState()
 
-const AttestationPresence =  () => {
+ 
+ 
+  /*
+  const crendentials= async () => {
+    try { 
 
-    const [motif, setMotif] = useState(null);
-    const [groupe, setGroupe ] = useState(null);
-    const [nom, setNom ] = useState(null);
-    const [prenom, setPrenom ] = useState(null);
-    const [niveau, setNiveau ] = useState(null);
+      let userName = await AsyncStorage.getItem('username');
+      let passWord = await AsyncStorage.getItem('password')
 
-    const depotDemande = (motif, groupe, nom, prenom, niveau) =>{
+      
+      
+      if (userName) {
+        console.log("userName" , userName)
+        setUserName(userName);
+      }
 
+      if(passWord){
+        console.log("pass" , passWord)
 
+        setPassWord(passWord)
+      }
 
-      axios
-      .post(`${BASE_URL}/process-definition/att_presence:4:bd2b40ca-ba49-11ec-9615-8d765d216035/submit-form`,
-      {
-        motif:motif,
-        groupe:groupe,
-        nom:nom,
-        prenom:prenom,
-        niveau:niveau
-      },
-      {
-        auth: {
-          username: "etudiant",
-          password: "bpm"
-        }
-     
-      })
-      .then(res => {  
-        console.log(res); 
+    } catch (e) {
+      console.log(`get credentials error ${e}`);
+    }
+
+  };
+*/
+
+  const depotDemande = async () => {
+
+    let userName = await AsyncStorage.getItem('username');
+    let passWord = await AsyncStorage.getItem('password');
+
+    axios
+      .post(
+        `${BASE_URL}/process-definition/att_presence:4:bd2b40ca-ba49-11ec-9615-8d765d216035/submit-form`,
+        
+        requestData
+        ,
+        {
+          auth: {
+            username: userName,
+            password: passWord,
+          },
+        },
+      )
+      .then(res => {
+        console.log(
+          'demande attestation de présence envoyée avec succès : ',
+          res.data,
+        );
+        setRequestData({"variables": {...fieldsFormAPI}})
+      
       })
       .catch(e => {
         console.log(` demande attestation error ${e}`);
-        
       });
 
 
+      
 
-    }
+   
+  };
 
- return(
+  const getForm = async () => {
+    let userName = await AsyncStorage.getItem('username');
+    let passWord = await AsyncStorage.getItem('password');
 
+    await axios
+      .get(
+        `${BASE_URL}/process-definition/att_presence:4:bd2b40ca-ba49-11ec-9615-8d765d216035/form-variables`,
+        {
+          auth: {
+            username: userName,
+            password: passWord,
+          },
+        },
+      )
+      .then(res => {
+        //console.log('Data from Get Axios ', JSON.stringify(res.data, null,2));
+        setFieldsFormAPI(res.data);
+        setKeysOfData(Object.keys(res.data));
+        setRequestData({"variables": {...res.data}})
+      })
+      .catch(e => {
+        console.log(`Get Form error ${e}`);
+      });
+  };
+
+  const handleChange = (key, value) => {
+    console.log('Text Index:' + key);
+    console.log('Text Value:' + value);
+    const name = keysOfData[key]
+   // console.log( "name" ,name)
+    setRequestData(
+
+      //ovveride of names motif ..with new values
+
+      {variables : { ...requestData.variables, [name]: { ...requestData.variables[name], value } }
+      }
+    );
+
+   
+  };
+
+
+
+  useEffect(() => {
+    getForm();
+  }, []);
+
+  return (
     <View style={styles.container}>
-      
       <View style={styles.wrapper}>
+      {
+      console.log("requestData here" , JSON.stringify(requestData, null,2))
 
-
-        <TextInput
-          style={styles.input}
-          value={motif}
-          placeholder="Entrer votre motif"
-          onChangeText={text => setMotif(text)}
-        />
-
-        <TextInput
-          style={styles.input}
-          value={groupe}
-          placeholder="Entrer votre groupe"
-          onChangeText={text => setGroupe(text)}
-          
-        />
-
-        <TextInput
-          style={styles.input}
-          value={nom}
-          placeholder="Entrer votre nom"
-          onChangeText={text => setNom(text)}
-        
-        />
-
-        <TextInput
-        style={styles.input}
-        value={prenom}
-        placeholder="Entrer votre prenom"
-        onChangeText={text => setPrenom(text)}
-      
-        />
-
-        <TextInput
-        style={styles.input}
-        value={niveau}
-        placeholder="Entrer votre niveau"
-        onChangeText={text => setNiveau(text)}
-      
-        />
+      }
+        {fieldsFormAPI ? (
+          keysOfData?.map((el, key) => {
+            return (
+              <TextInput
+                style={styles.input}
+                name={keysOfData[key]}
+                key={key}
+                type={fieldsFormAPI[el].type}
+                value={fieldsFormAPI[el].value}
+                placeholder={`Entrer votre ${keysOfData[key]}`}
+                onChangeText={text => handleChange(key, text )}
+              />
+            );
+          })
+        ) : (
+          <Text> Loading </Text>
+        )}
 
         <Button
           title="Déposer demande"
           onPress={() => {
-            depotDemande(motif, groupe, nom, prenom, niveau);  
-
+            depotDemande();
+            setModalVisible(true);
           }}
-          
         />
-       
-       
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}> Demande envoyée avec succès !</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
- )
+  );
 };
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  wrapper: {
+    width: '80%',
+  },
+  input: {
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#bbb',
+    borderRadius: 5,
+    paddingHorizontal: 14,
+  },
+  link: {
+    color: 'blue',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    wrapper: {
-      width: '80%',
-    },
-    input: {
-      marginBottom: 12,
-      borderWidth: 1,
-      borderColor: '#bbb',
-      borderRadius: 5,
-      paddingHorizontal: 14,
-    },
-    link: {
-      color: 'blue',
-    },
-  });
-
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: 'green',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: 'green',
+    fontWeight: 'bold',
+  },
+});
 
 export default AttestationPresence;

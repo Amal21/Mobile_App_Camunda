@@ -18,7 +18,8 @@ export const AuthProvider = ({children}) => {
 
     setIsLoading(true);
     axios
-      .get(`${BASE_URL}/process-definition`,{
+      .get(`${BASE_URL}/process-definition?latest=true&active=true&startableInTasklist=true&startablePermissionCheck=true&firstResult=0&maxResults=15`,
+      {
 
         auth: {
           username: email,
@@ -26,6 +27,12 @@ export const AuthProvider = ({children}) => {
         }
       })
       .then(res => {
+
+        AsyncStorage.setItem()
+
+        AsyncStorage.setItem('username', email);
+        AsyncStorage.setItem('password', password);
+
         let listprocess = res;
         //console.log(listprocess);
         setListProcess(listprocess);

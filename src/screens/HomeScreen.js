@@ -1,4 +1,5 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Button,
   StyleSheet,
@@ -10,42 +11,58 @@ import {
 import {AuthContext} from '../context/AuthContext';
 
 const Home = ({navigation}) => {
-  const {listprocess, isLoading, logout} = useContext(AuthContext);
+  const {listprocess, listtasks, isLoading, logout} = useContext(AuthContext);
+  const [user, setUser] = useState();
+
+  const getUsername = async () => {
+    let userName = await AsyncStorage.getItem('username');
+
+    setUser(userName);
+  };
+
+  useEffect(() => {
+    getUsername();
+  }, []);
 
   return (
     <View style={styles.container}>
-
       <View style={styles.welcome}>
-     
-        { listprocess.data.length > 0 ? 
+        {console.log('user from storage', user)}
 
-          <> 
-          <Text style={styles.welcome}>Liste des processus</Text>
+        {user == 'etudiant' ? (
+          <>
+            <Text style={styles.welcome}>Liste des processus</Text>
 
+            {listprocess?.data?.map(e => {
+              return (
+                <Pressable
+                  style={styles.styleBtn}
+                  onPress={() => {
+                    if (e.name == 'Demande Attestation de presence') {
+                      navigation.navigate('Demande Attestation de Présence', {
+                        id: e.id,
+                      });
+                      console.log('id of cliqued object', e.id);
+                    }
+                  }}>
+                  <Text style={styles.text}>{e.name} </Text>
+                </Pressable>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            <Text style={styles.welcome}>Liste des tâches</Text>
 
-         { listprocess.data.map(e => {
-          return (
-
-            <Pressable
-              style={styles.styleBtn}
-              onPress={() => {
-
-                if(e.name == "Demande Attestation de presence")
-                { navigation.navigate('Demande Attestation de Présence',{ id: e.id});
-                  console.log('id of cliqued object', e.id)
-                }
-               
-              }}>
-            
-              <Text style={styles.text}>{e.name} </Text>
-            </Pressable>
-          );
-        }
-        )
-}
-        </>
-        
-        : <Text style={styles.text} > Profil agent n'a aucun processus à lancer !</Text>}
+            {listtasks?.data?.map(e => {
+              return (
+                <Pressable style={styles.styleBtn}>
+                  <Text style={styles.text}>{e.name} </Text>
+                </Pressable>
+              );
+            })}
+          </>
+        )}
       </View>
     </View>
   );
@@ -62,16 +79,15 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 18,
     marginBottom: 8,
+    textAlign: 'center',
     //fontWeight:'bold',
-    color: 'black'
+    color: 'black',
   },
-  text:{
-
+  text: {
     fontSize: 15,
     //marginBottom: 8,
     //fontWeight:'bold',
-    color: 'black'
-
+    color: 'black',
   },
   styleBtn: {
     paddingTop: 5,
@@ -81,13 +97,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     backgroundColor: 'lightblue',
     height: 50,
-    width:350,
+    width: 350,
     textAlign: 'center',
-    fontWeight:'bold',
+    fontWeight: 'bold',
 
     borderColor: 'white',
-
-    
   },
 });
 

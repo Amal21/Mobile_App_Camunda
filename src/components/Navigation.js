@@ -18,7 +18,9 @@ const Navigation = () => {
       <Stack.Navigator>
         {isLogged ? (
           <>
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen 
+            name="Home" 
+            component={Home} />
 
             <Stack.Screen
               name="Demande Attestation de Présence"

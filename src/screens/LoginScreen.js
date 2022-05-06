@@ -10,7 +10,6 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
 
-
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
@@ -23,29 +22,25 @@ const LoginScreen = ({navigation}) => {
         <TextInput
           style={styles.input}
           value={email}
-          placeholder="Enter username"
+          placeholder="Entrer votre nom d'utilisateur"
           onChangeText={text => setEmail(text)}
         />
 
         <TextInput
           style={styles.input}
           value={password}
-          placeholder="Enter password"
+          placeholder="Entrer votre mot de passe"
           onChangeText={text => setPassword(text)}
           secureTextEntry
         />
 
         <Button
-          title="Login"
+          title="Se connecter"
           onPress={() => {
             login(email, password);
             navigation.navigate('Home');
-
           }}
-          
         />
-       
-       
       </View>
     </View>
   );

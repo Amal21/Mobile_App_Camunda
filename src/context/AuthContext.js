@@ -80,7 +80,7 @@ export const AuthProvider = ({children}) => {
   const logout = () => {
     AsyncStorage.removeItem('username');
     AsyncStorage.removeItem('password');
-    console.log('deleted');
+    
   };
 
   useEffect(() => {

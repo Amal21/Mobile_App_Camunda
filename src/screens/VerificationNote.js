@@ -13,41 +13,16 @@ import {
 import {BASE_URL} from '../config';
 import axios from 'axios';
 
-const AttestationPresence = ({route}) => {
+const VerificationNote = ({route}) => {
+
+
   const {id} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
-  //const [userName, setUserName ] = useState();
-  //const [passWord, setPassWord ] = useState();
   const [fieldsFormAPI, setFieldsFormAPI] = useState(null);
   const [keysOfData, setKeysOfData] = useState();
   const [requestData, setRequestData] = useState();
 
-  /*
-  const crendentials= async () => {
-    try { 
 
-      let userName = await AsyncStorage.getItem('username');
-      let passWord = await AsyncStorage.getItem('password')
-
-      
-      
-      if (userName) {
-        console.log("userName" , userName)
-        setUserName(userName);
-      }
-
-      if(passWord){
-        console.log("pass" , passWord)
-
-        setPassWord(passWord)
-      }
-
-    } catch (e) {
-      console.log(`get credentials error ${e}`);
-    }
-
-  };
-*/
 
   const depotDemande = async () => {
     let userName = await AsyncStorage.getItem('username');
@@ -67,14 +42,14 @@ const AttestationPresence = ({route}) => {
       )
       .then(res => {
         console.log(
-          'demande attestation de présence envoyée avec succès : ',
+          'demande vérification note envoyée avec succès : ',
           res.data,
         );
         setRequestData({variables: {...fieldsFormAPI}});
         //setFieldsFormAPI(fieldsFormAPI)
       })
       .catch(e => {
-        console.log(` demande attestation error ${e}`);
+        console.log(` demande vérification note error ${e}`);
       });
   };
 
@@ -90,7 +65,7 @@ const AttestationPresence = ({route}) => {
         },
       })
       .then(res => {
-        //console.log('Data from Get Axios ', JSON.stringify(res.data, null,2));
+       
         setFieldsFormAPI(res.data);
         setKeysOfData(Object.keys(res.data));
         setRequestData({variables: {...res.data}});
@@ -104,9 +79,9 @@ const AttestationPresence = ({route}) => {
     console.log('Text Index:' + key);
     console.log('Text Value:' + value);
     const name = keysOfData[key];
-    // console.log( "name" ,name)
+  
     setRequestData(
-      //ovveride of names motif ..with new values
+      
 
       {
         variables: {
@@ -176,62 +151,66 @@ const AttestationPresence = ({route}) => {
       </Modal>
     </View>
   );
+
+
+
+
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  wrapper: {
-    width: '80%',
-  },
-  input: {
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#bbb',
-    borderRadius: 5,
-    paddingHorizontal: 14,
-  },
-  link: {
-    color: 'blue',
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: 'green',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    color: 'green',
-    fontWeight: 'bold',
-  },
-});
-
-export default AttestationPresence;
+    wrapper: {
+      width: '80%',
+    },
+    input: {
+      marginBottom: 12,
+      borderWidth: 1,
+      borderColor: '#bbb',
+      borderRadius: 5,
+      paddingHorizontal: 14,
+    },
+    link: {
+      color: 'blue',
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 35,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    button: {
+      padding: 10,
+      elevation: 2,
+    },
+    buttonOpen: {
+      backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+      backgroundColor: 'green',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: 'center',
+      color: 'green',
+      fontWeight: 'bold',
+    },
+  });
+  
+export default VerificationNote;

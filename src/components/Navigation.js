@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
 import {Text, View} from 'react-native';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import AttestationPresence from '../screens/AttestationPresence';
+import VerificationNote from '../screens/VerificationNote';
 import {AuthContext} from '../context/AuthContext';
 
 const Stack = createNativeStackNavigator();
@@ -18,13 +18,15 @@ const Navigation = () => {
       <Stack.Navigator>
         {isLogged ? (
           <>
-            <Stack.Screen 
-            name="Home" 
-            component={Home} />
+            <Stack.Screen name="Home" component={Home} />
 
             <Stack.Screen
               name="Demande Attestation de Présence"
               component={AttestationPresence}
+            />
+            <Stack.Screen
+              name="Demande Vérification Note"
+              component={VerificationNote}
             />
           </>
         ) : (

@@ -5,10 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
   StyleSheet,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
+
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
@@ -17,8 +19,13 @@ const LoginScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+
+    <Image style={styles.img} source={require('./l.png')} />
+    
       <Spinner visible={isLoading} />
       <View style={styles.wrapper}>
+      
+     
         <TextInput
           style={styles.input}
           value={email}
@@ -65,6 +72,14 @@ const styles = StyleSheet.create({
   link: {
     color: 'blue',
   },
+  img:{ 
+    width: 150,
+    height: 130,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom:20
+  }
 });
 
 export default LoginScreen;

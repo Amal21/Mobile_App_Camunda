@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import {AuthContext} from '../context/AuthContext';
 
+
+
+
 const Home = ({navigation}) => {
   const {listprocess, listtasks, isLoading, logout} = useContext(AuthContext);
   const [user, setUser] = useState();
@@ -43,6 +46,11 @@ const Home = ({navigation}) => {
                         id: e.id,
                       });
                       console.log('id of cliqued object', e.id);
+                    }else if (e.name == 'Demande Verification Note') {
+                      navigation.navigate('Demande Vérification Note', {
+                        id: e.id,
+                      });
+                      console.log('id of cliqued object', e.id);
                     }
                   }}>
                   <Text style={styles.text}>{e.name} </Text>
@@ -63,6 +71,7 @@ const Home = ({navigation}) => {
             })}
           </>
         )}
+
       </View>
     </View>
   );

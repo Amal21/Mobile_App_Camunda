@@ -14,8 +14,10 @@ import {BASE_URL} from '../config';
 import axios from 'axios';
 
 const AttestationPresence = ({route}) => {
+
   const {id} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
+  const [error, setError] = useState(null)
   //const [userName, setUserName ] = useState();
   //const [passWord, setPassWord ] = useState();
   const [fieldsFormAPI, setFieldsFormAPI] = useState(null);
@@ -50,6 +52,7 @@ const AttestationPresence = ({route}) => {
 */
 
   const depotDemande = async () => {
+
     let userName = await AsyncStorage.getItem('username');
     let passWord = await AsyncStorage.getItem('password');
 
@@ -66,6 +69,7 @@ const AttestationPresence = ({route}) => {
         },
       )
       .then(res => {
+        setModalVisible(true);
         console.log(
           'demande attestation de présence envoyée avec succès : ',
           res.data,
@@ -75,10 +79,12 @@ const AttestationPresence = ({route}) => {
       })
       .catch(e => {
         console.log(` demande attestation error ${e}`);
+        setError(e.message);
       });
   };
 
   const getForm = async () => {
+    
     let userName = await AsyncStorage.getItem('username');
     let passWord = await AsyncStorage.getItem('password');
 
@@ -101,13 +107,15 @@ const AttestationPresence = ({route}) => {
   };
 
   const handleChange = (key, value) => {
+
     console.log('Text Index:' + key);
     console.log('Text Value:' + value);
     const name = keysOfData[key];
     // console.log( "name" ,name)
-    setRequestData(
-      //ovveride of names motif ..with new values
 
+    setRequestData(
+
+      //ovveride of names motif ..with new values
       {
         variables: {
           ...requestData.variables,
@@ -124,6 +132,9 @@ const AttestationPresence = ({route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
+     
+
+      
         {console.log(
           'fieldsFormAPI here',
           JSON.stringify(requestData, null, 2),
@@ -150,9 +161,12 @@ const AttestationPresence = ({route}) => {
           title="Déposer demande"
           onPress={() => {
             depotDemande();
-            setModalVisible(true);
+            
           }}
+          
+            
         />
+        {error&&<Text >{error.message}</Text>}
       </View>
 
       <Modal

@@ -41,6 +41,7 @@ const VerificationNote = ({route}) => {
         },
       )
       .then(res => {
+        setModalVisible(true);
         console.log(
           'demande vérification note envoyée avec succès : ',
           res.data,
@@ -125,7 +126,7 @@ const VerificationNote = ({route}) => {
           title="Déposer demande"
           onPress={() => {
             depotDemande();
-            setModalVisible(true);
+            
           }}
         />
       </View>

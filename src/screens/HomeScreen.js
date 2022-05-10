@@ -14,13 +14,22 @@ import {AuthContext} from '../context/AuthContext';
 
 
 const Home = ({navigation}) => {
-  const {listprocess, listtasks, isLoading, logout} = useContext(AuthContext);
+
+ 
+  const {listprocess, listtasks, isLoading} = useContext(AuthContext);
   const [user, setUser] = useState();
 
   const getUsername = async () => {
     let userName = await AsyncStorage.getItem('username');
 
     setUser(userName);
+  };
+
+  const logout = () => {
+    AsyncStorage.removeItem('username');
+    AsyncStorage.removeItem('password');
+    navigation.navigate('Login');
+    
   };
 
   useEffect(() => {
@@ -71,6 +80,13 @@ const Home = ({navigation}) => {
             })}
           </>
         )}
+
+        
+
+       
+        
+          
+     
 
       </View>
     </View>

@@ -11,6 +11,7 @@ export const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
+  const [error, setError] = useState("");
 
   const login = (email, password) => {
     setIsLoading(true);
@@ -47,10 +48,12 @@ export const AuthProvider = ({children}) => {
           console.log(listprocess);
 
           setIsLoading(false);
+          navigation.navigate('Home')
         })
         .catch(e => {
           console.log(`list process error ${e}`);
           setIsLoading(false);
+          setError(e)
         });
     } else if (email == 'agent') {
       axios
@@ -69,17 +72,24 @@ export const AuthProvider = ({children}) => {
           setListTasks(listtasks);
           setIsLogged(true);
           setIsLoading(false);
+          navigation.navigate('Home')
         })
         .catch(e => {
           console.log(`list tasks error ${e}`);
           setIsLoading(false);
+          setError(e)
         });
+    }else if(email=='enseignant')
+    {
+      console.log(`go to dashboard enseignant}`);
     }
   };
 
   const logout = () => {
     AsyncStorage.removeItem('username');
     AsyncStorage.removeItem('password');
+    navigation.navigate('Login');
+    setIsLogged(false)
     
   };
 
@@ -97,6 +107,7 @@ export const AuthProvider = ({children}) => {
         splashLoading,
         login,
         logout,
+        error
       }}>
       {children}
     </AuthContext.Provider>

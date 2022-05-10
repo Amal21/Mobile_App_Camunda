@@ -13,6 +13,7 @@ import {AuthContext} from '../context/AuthContext';
 
 
 const LoginScreen = ({navigation}) => {
+  const {error} = useContext(AuthContext);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const {isLoading, login} = useContext(AuthContext);
@@ -20,10 +21,12 @@ const LoginScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
 
+
     <Image style={styles.img} source={require('./l.png')} />
     
       <Spinner visible={isLoading} />
       <View style={styles.wrapper}>
+      <Text style={styles.error} >{error.message}</Text>
       
      
         <TextInput
@@ -45,9 +48,10 @@ const LoginScreen = ({navigation}) => {
           title="Se connecter"
           onPress={() => {
             login(email, password);
-            navigation.navigate('Home');
+            
           }}
         />
+        
       </View>
     </View>
   );
@@ -58,6 +62,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  error:{
+    color:'red',
+    fontWeight:'bold'
   },
   wrapper: {
     width: '80%',
